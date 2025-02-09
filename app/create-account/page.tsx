@@ -11,30 +11,34 @@ export default function CreateAccount() {
       </div>
       <form className='flex flex-col gap-3'>
         <FormInput
+          name='username'
           type='text'
           placeholder='Username'
           required={true}
           errors={[]}
         />
         <FormInput
+          name='email'
           type='email'
           placeholder='Email'
           required={true}
           errors={[]}
         />
         <FormInput
+          name='password'
           type='password'
           placeholder='Password'
           required={true}
           errors={[]}
         />
         <FormInput
+          name='confirmpassword'
           type='password'
           placeholder='Confirm password'
           required={true}
           errors={[]}
         />
-        <FormButton loading={false} text='Create Account' />
+        <FormButton text='Create Account' />
       </form>
       <SocialLogin />
     </div>
