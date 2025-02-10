@@ -1,44 +1,53 @@
-import FormInput from '@/components/FormInput';
-import FormButton from '@/components/FormButton';
+'use client';
+import Input from '@/components/Input';
+import Button from '@/components/Button';
 import SocialLogin from '@/components/SocialLogin';
+import createAccoutFormAction from './actions';
+import { useActionState } from 'react';
+import { PASSWORD_MIN_LENGTH } from '@/lib/constants';
 
 export default function CreateAccount() {
+  const [state, dispatch] = useActionState(createAccoutFormAction, null);
   return (
     <div className='flex flex-col gap-10 py-8 px-6'>
       <div className='flex-flex-col gap-2 *:font-medium '>
         <h1 className='text-2xl'>Hello</h1>
         <h2 className='text-xl'>Fill in the form below to join!</h2>
       </div>
-      <form className='flex flex-col gap-3'>
-        <FormInput
+      <form action={dispatch} className='flex flex-col gap-3'>
+        <Input
           name='username'
           type='text'
           placeholder='Username'
-          required={true}
-          errors={[]}
+          required
+          errors={state?.fieldErrors.username}
+          minLength={PASSWORD_MIN_LENGTH}
+          maxLength={10}
         />
-        <FormInput
+        <Input
           name='email'
           type='email'
           placeholder='Email'
-          required={true}
-          errors={[]}
+          required
+          errors={state?.fieldErrors.email}
         />
-        <FormInput
+        <Input
           name='password'
           type='password'
           placeholder='Password'
-          required={true}
-          errors={[]}
+          required
+          errors={state?.fieldErrors.password}
+          minLength={PASSWORD_MIN_LENGTH}
         />
-        <FormInput
-          name='confirmpassword'
+        <Input
+          name='confirmPassword'
           type='password'
           placeholder='Confirm password'
-          required={true}
-          errors={[]}
+          required
+          errors={state?.fieldErrors.confirmPassword}
+          minLength={PASSWORD_MIN_LENGTH}
         />
-        <FormButton text='Create Account' />
+        <Button text='Create Account' />
       </form>
       <SocialLogin />
     </div>
