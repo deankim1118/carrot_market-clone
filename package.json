@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@prisma/client": "^6.3.1",
     "next": "15.1.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -19,14 +20,24 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/forms": "^0.5.10",
-    "@types/node": "^20",
+    "@types/node": "^20.17.17",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/validator": "^13.12.2",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
     "postcss": "^8",
+    "prisma": "^6.3.1",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
-  }
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  },
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

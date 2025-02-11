@@ -27,6 +27,7 @@ export default function SMSLogin() {
             required
             minLength={100000}
             maxLength={999999}
+            errors={state.error?.formErrors}
           />
         ) : (
           <Input
