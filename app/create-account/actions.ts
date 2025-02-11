@@ -6,6 +6,10 @@ import {
   PASSWORD_REGEX_ERROR,
 } from '@/lib/constants';
 import db from '@/lib/db';
+import bcrypt from 'bcrypt';
+import { getIronSession } from 'iron-session';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 // Check if the username is unique in your database here
 const checkUniqueUsername = async (username: string) => {
@@ -77,8 +81,27 @@ export default async function createAccoutFormAction(
   } else {
     /**This place should include only the order that is successed and validated.**/
     // hash password
+    const hashedPassword = await bcrypt.hash(result.data.password, 10);
     // save user to the database
+    const user = await db.user.create({
+      data: {
+        username: result.data.username,
+        email: result.data.email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+      },
+    });
     // log the user in
+    const session = await getIronSession(cookies(), {
+      cookieName: 'yummy-karrot',
+      password: process.env.COOKIE_PASSWORD,
+    });
+    //@ts-ignore
+    session.id = user.id;
+    await session.save();
     // redirect to '/home'
+    redirect('/profile');
   }
 }
