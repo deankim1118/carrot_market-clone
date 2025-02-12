@@ -52,6 +52,7 @@ export async function loginFormAction(prevState: any, formData: FormData) {
     if (passwordConfirmed) {
       const session = await getSession();
       session.id = user!.id;
+      await session.save();
       redirect('/profile');
     } else {
       return {
