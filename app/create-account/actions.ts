@@ -7,9 +7,8 @@ import {
 } from '@/lib/constants';
 import db from '@/lib/db';
 import bcrypt from 'bcrypt';
-import { getIronSession } from 'iron-session';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import getSession from '../../lib/session';
 
 // Check if the username is unique in your database here
 const checkUniqueUsername = async (username: string) => {
@@ -94,11 +93,7 @@ export default async function createAccoutFormAction(
       },
     });
     // log the user in
-    const session = await getIronSession(cookies(), {
-      cookieName: 'yummy-karrot',
-      password: process.env.COOKIE_PASSWORD,
-    });
-    //@ts-ignore
+    const session = await getSession();
     session.id = user.id;
     await session.save();
     // redirect to '/home'
