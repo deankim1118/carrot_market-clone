@@ -10,28 +10,6 @@ import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
 import getSession from '../../lib/session';
 
-// Check if the username is unique in your database here
-const checkUniqueUsername = async (username: string) => {
-  const user = await db.user.findUnique({
-    where: { username },
-    select: { id: true },
-  });
-  // true if unique, false otherwise
-  // But return false if it's true, so that the zod will return false(with refine()) when username is found in database
-  return !Boolean(user);
-};
-
-// Check if the username is unique in your database here
-const checkUniqueEmail = async (email: string) => {
-  const user = await db.user.findUnique({
-    where: { email },
-    select: { id: true },
-  });
-  // true if unique, false otherwise
-  // But return false if it's true, so that the zod will return false(with refine()) when username is found in database
-  return !Boolean(user);
-};
-
 const formSchema = z
   .object({
     username: z
@@ -40,27 +18,65 @@ const formSchema = z
         required_error: 'Please enter the username',
       })
       .trim()
-      .toLowerCase()
-      .refine(checkUniqueUsername, 'This username is already taken'),
-    email: z
-      .string()
-      .email()
-      .toLowerCase()
-      .refine(checkUniqueEmail, 'This email is already taken'),
-    password: z
-      .string()
-      .min(PASSWORD_MIN_LENGTH)
-      .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+      .toLowerCase(),
+    email: z.string().email().toLowerCase(),
+    password: z.string().min(PASSWORD_MIN_LENGTH),
     confirmPassword: z.string().min(PASSWORD_MIN_LENGTH),
   })
-  .superRefine(({ password, confirmPassword }, ctx) => {
-    if (password !== confirmPassword) {
+  .superRefine(async ({ username }, ctx) => {
+    const user = await db.user.findUnique({
+      where: { username },
+      select: { id: true },
+    });
+    if (user) {
       ctx.addIssue({
         code: 'custom',
-        path: ['confirmPassword'],
-        message: 'Passwords do not match',
+        path: ['username'],
+        message: 'This username is already taken',
+        fatal: true,
       });
+      return z.NEVER;
     }
+  })
+  .superRefine(async ({ email }, ctx) => {
+    const user = await db.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+    if (user) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['email'],
+        message: 'This email is already taken',
+        fatal: true,
+      });
+      return z.NEVER;
+    }
+  })
+
+  .superRefine(({ password }, ctx) => {
+    if (PASSWORD_REGEX.test(password) === false) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['password'],
+        message: PASSWORD_REGEX_ERROR,
+        fatal: true,
+      });
+      return z.NEVER;
+    }
+  })
+  // .superRefine(({ password, confirmPassword }, ctx) => {
+  //   if (password !== confirmPassword) {
+  //     ctx.addIssue({
+  //       code: 'custom',
+  //       path: ['confirmPassword'],
+  //       message: 'Passwords do not match',
+  //     });
+  //   }
+  // });
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
   });
 
 export default async function createAccoutFormAction(
