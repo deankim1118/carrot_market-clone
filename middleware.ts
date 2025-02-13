@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import getSession from './lib/session';
+import { getSession } from './lib/session';
 
 interface RoutesBoolean {
   [pathname: string]: boolean;
@@ -10,6 +10,8 @@ const publicUrls: RoutesBoolean = {
   '/login': true,
   '/create-account': true,
   '/sms': true,
+  '/github/start': true,
+  '/github/complete': true,
 };
 
 export async function middleware(request: NextRequest) {

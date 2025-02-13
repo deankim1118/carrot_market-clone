@@ -8,7 +8,7 @@ import {
 import db from '@/lib/db';
 import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
-import getSession from '../../lib/session';
+import { loginSession } from '@/lib/session';
 
 const formSchema = z
   .object({
@@ -109,9 +109,7 @@ export default async function createAccoutFormAction(
       },
     });
     // log the user in
-    const session = await getSession();
-    session.id = user.id;
-    await session.save();
+    await loginSession(user.id);
     // redirect to '/home'
     redirect('/profile');
   }
