@@ -21,11 +21,8 @@ export default async function Profile() {
     'use server';
     const session = await getSession();
 
-    if (session) {
-      await session.destroy();
-      console.log('destroied');
-      redirect('/');
-    }
+    await session.destroy();
+    redirect('/');
   };
 
   return (
