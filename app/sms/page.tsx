@@ -5,7 +5,7 @@ import { useActionState } from 'react';
 import { smsFormAction } from './actions';
 
 const initialState = {
-  token: false,
+  isToken: false,
   error: undefined,
 };
 
@@ -19,7 +19,7 @@ export default function SMSLogin() {
         <h2 className='text-xl'>Verify your phone number</h2>
       </div>
       <form action={dispatch} className='flex flex-col gap-3'>
-        {state.token ? (
+        {state.isToken ? (
           <Input
             name='token'
             type='number'
@@ -38,7 +38,7 @@ export default function SMSLogin() {
             errors={state.error?.formErrors}
           />
         )}
-        <Button text={state.token ? 'Verify Code' : 'Send Code'} />
+        <Button text={state.isToken ? 'Verify Code' : 'Send Code'} />
       </form>
     </div>
   );
