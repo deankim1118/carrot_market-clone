@@ -7,7 +7,7 @@ import {
 } from '@/lib/constants';
 import db from '@/lib/db';
 import bcrypt from 'bcrypt';
-import { loginSession } from '../../lib/session';
+import { loginSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
 
 const checkEmailExists = async (email: string) => {

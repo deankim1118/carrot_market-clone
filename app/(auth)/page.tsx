@@ -1,10 +1,14 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import carrotIcon from '../../public/images/carrotIcon.svg';
 
 export default function Home() {
   return (
     <div className='flex flex-col justify-between items-center min-h-screen p-6 '>
       <div className='my-auto flex flex-col items-center gap-2 *:font-medium'>
-        <span className='text-9xl'>🥕</span>
+        <span className='text-9xl'>
+          <Image src={carrotIcon} alt='carrot logo' width='150' height='150' />
+        </span>
         <h1 className='text-4xl'>Carrot Market</h1>
         <h2 className='text-2xl'>Welcome to Carrot Market</h2>
       </div>
