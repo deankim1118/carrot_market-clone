@@ -1,5 +1,7 @@
 import db from '@/lib/db';
-import ListProduct from '@/components/ListProduct';
+import ProductList from '@/components/ProductList';
+import { Prisma } from '@prisma/client';
+import { NoOfProductPerPage } from '@/lib/constants';
 
 async function getInitialProducts() {
   // await new Promise((resolve) => {
@@ -13,7 +15,7 @@ async function getInitialProducts() {
       created_at: true,
       id: true,
     },
-    take: 1,
+    take: NoOfProductPerPage,
     orderBy: {
       created_at: 'desc',
     },
@@ -21,13 +23,15 @@ async function getInitialProducts() {
   return products;
 }
 
+export type InitialProductsType = Prisma.PromiseReturnType<
+  typeof getInitialProducts
+>;
+
 export default async function Products() {
-  const products = await getInitialProducts();
+  const initialProducts = await getInitialProducts();
   return (
-    <div className='flex flex-col gap-4 p-8'>
-      {products.map((product) => (
-        <ListProduct key={product.id} {...product} />
-      ))}
+    <div>
+      <ProductList initialProducts={initialProducts} />
     </div>
   );
 }

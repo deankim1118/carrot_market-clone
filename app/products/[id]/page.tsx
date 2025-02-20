@@ -57,7 +57,7 @@ export default async function ProductDetatil({
   return (
     <div className=''>
       <div className='relative aspect-video '>
-        <Image src='/mugCup.webp' alt={product.title} fill objectFit='cover' />
+        <Image src={product.photo} alt={product.title} fill objectFit='cover' />
       </div>
       <div className='p-4 bottom-1 border-white border-b '>
         <div className='flex gap-4 items-center '>
