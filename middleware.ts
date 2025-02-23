@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
   } else {
     if (isExist) {
       // Redirect to the home page if the user is authenticated
-      return NextResponse.redirect(new URL('/profile', request.url));
+      return NextResponse.redirect(new URL('/home', request.url));
     }
   }
 }
