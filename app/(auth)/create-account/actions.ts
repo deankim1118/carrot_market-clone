@@ -80,7 +80,7 @@ const formSchema = z
   });
 
 export default async function createAccoutFormAction(
-  prevState: any,
+  prevState: unknown,
   formData: FormData,
 ) {
   const data = {

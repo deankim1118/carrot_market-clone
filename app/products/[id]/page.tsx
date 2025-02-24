@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { UserIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { formatToDollar } from '@/lib/utils';
-import { unstable_cache as nextCache, revalidateTag } from 'next/cache';
+import { unstable_cache as nextCache } from 'next/cache';
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
@@ -19,7 +19,6 @@ async function getProducts(id: number) {
   //   await new Promise((resolve) => {
   //     setTimeout(resolve, 5000);
   //   });
-  console.log('db.hit: product-detail');
   const product = await db.product.findUnique({
     where: { id },
     include: {
@@ -39,7 +38,6 @@ const getCachedProducts = nextCache(getProducts, ['product-detail'], {
 });
 
 async function getProductTitle(id: number) {
-  console.log('db.hit: product-title');
   const product = await db.product.findUnique({
     where: { id },
     select: {
@@ -53,7 +51,11 @@ const getCachedProductTitle = nextCache(getProductTitle, ['product-title'], {
   tags: ['product-title'],
 });
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const product = await getCachedProductTitle(Number(id));
   return {
@@ -63,7 +65,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 export default async function ProductDetatil({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const { id: idString } = await params;
   const id = Number(idString);
@@ -83,10 +85,10 @@ export default async function ProductDetatil({
     return redirect('/products');
   };
 
-  const revalidate = async () => {
-    'use server';
-    revalidateTag('product-title');
-  };
+  // const revalidate = async () => {
+  //   'use server';
+  //   revalidateTag('product-title');
+  // };
 
   return (
     <div className=''>
@@ -125,9 +127,9 @@ export default async function ProductDetatil({
         </span>
         <div className='flex gap-4 items-center'>
           {isOwner ? (
-            <form action={revalidate}>
+            <form action={deleteProduct}>
               <button className='bg-red-500 px-2 py-1 rounded-md text-sm text-center text-white font-semibold'>
-                Revalidate
+                Delete
               </button>
             </form>
           ) : null}

@@ -6,7 +6,7 @@ import { getSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
 import { productSchema } from './schema';
 
-export default async function uploadProduct(_: any, formData: FormData) {
+export default async function uploadProduct(_: unknown, formData: FormData) {
   const data = await {
     photo: formData.get('photo'),
     title: formData.get('title'),
@@ -27,7 +27,7 @@ export default async function uploadProduct(_: any, formData: FormData) {
   }
   const session = await getSession();
   if (session.id) {
-    const product = await db.product.create({
+    await db.product.create({
       data: {
         photo: result.data.photo,
         title: result.data.title,

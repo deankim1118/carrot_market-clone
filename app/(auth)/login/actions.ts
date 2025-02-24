@@ -32,7 +32,7 @@ const formSchema = z.object({
     .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
 });
 
-export async function loginFormAction(prevState: any, formData: FormData) {
+export async function loginFormAction(prevState: unknown, formData: FormData) {
   const data = {
     email: formData.get('email'),
     password: formData.get('password'),

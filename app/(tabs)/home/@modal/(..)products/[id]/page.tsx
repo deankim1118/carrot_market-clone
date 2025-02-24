@@ -4,8 +4,13 @@ import db from '@/lib/db';
 import Image from 'next/image';
 import { formatToDollar } from '@/lib/utils';
 
-export default async function Modal({ params }: { params: { id: string } }) {
+export default async function Modal({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
+
   const product = await db.product.findUnique({
     where: { id: Number(id) },
     include: {
