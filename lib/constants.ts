@@ -5,4 +5,4 @@ export const PASSWORD_REGEX = new RegExp(
 export const PASSWORD_REGEX_ERROR =
   'Passwords must contain Uppercase, number, special characters';
 
-export const NoOfProductPerPage = 1;
+export const NoOfProductPerPage = 3;
