@@ -5,6 +5,7 @@ import db from '@/lib/db';
 import { getSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
 import { productSchema } from './schema';
+import { revalidatePath } from 'next/cache';
 
 export default async function uploadProduct(_: unknown, formData: FormData) {
   const data = await {
@@ -41,6 +42,7 @@ export default async function uploadProduct(_: unknown, formData: FormData) {
         id: true,
       },
     });
-    redirect('/products');
+    revalidatePath('/home');
+    redirect('/home');
   }
 }

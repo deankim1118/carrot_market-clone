@@ -4,9 +4,9 @@ import { Prisma } from '@prisma/client';
 import { NoOfProductPerPage } from '@/lib/constants';
 import Link from 'next/link';
 import { PlusIcon } from '@heroicons/react/24/solid';
-// import { unstable_cache as nextCache } from 'next/cache';
+import { unstable_cache as nextCache } from 'next/cache';
 
-// const getCachedProducts = nextCache(getInitialProducts, ['home-products']);
+const getCachedProducts = nextCache(getInitialProducts, ['home-products']);
 
 async function getInitialProducts() {
   // await new Promise((resolve) => {
@@ -38,10 +38,10 @@ export type InitialProductsType = Prisma.PromiseReturnType<
 >;
 
 // export const dynamic = "force-dynamic";
-export const revalidate = 60;
+// export const revalidate = 60;
 
 export default async function Products() {
-  const initialProducts = await getInitialProducts();
+  const initialProducts = await getCachedProducts();
   return (
     <div className='relative'>
       <ProductList initialProducts={initialProducts} />

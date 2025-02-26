@@ -5,13 +5,14 @@ import Image from 'next/image';
 import { UserIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { formatToDollar } from '@/lib/utils';
-import { unstable_cache as nextCache } from 'next/cache';
+import { unstable_cache as nextCache, revalidatePath } from 'next/cache';
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
   if (session.id) {
     return session.id === userId;
   }
+
   return false;
 }
 
@@ -82,7 +83,8 @@ export default async function ProductDetatil({
   const deleteProduct = async () => {
     'use server';
     await db.product.delete({ where: { id } });
-    return redirect('/products');
+    revalidatePath('/home');
+    return redirect('/home');
   };
 
   // const revalidate = async () => {
@@ -144,3 +146,12 @@ export default async function ProductDetatil({
     </div>
   );
 }
+
+// export async function generateStaticParams() {
+//   const products = await db.product.findMany({
+//     select: {
+//       id: true,
+//     },
+//   });
+//   return products.map((product) => ({ id: product.id + '' }));
+// }
