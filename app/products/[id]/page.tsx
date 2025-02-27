@@ -3,9 +3,12 @@ import { notFound, redirect } from 'next/navigation';
 import { getSession } from '@/lib/session';
 import Image from 'next/image';
 import { UserIcon } from '@heroicons/react/24/solid';
-import Link from 'next/link';
 import { formatToDollar } from '@/lib/utils';
-import { unstable_cache as nextCache, revalidatePath } from 'next/cache';
+import {
+  unstable_cache as nextCache,
+  revalidatePath,
+  revalidateTag,
+} from 'next/cache';
 
 async function getIsOwner(userId: number) {
   const session = await getSession();
@@ -91,6 +94,35 @@ export default async function ProductDetatil({
   //   'use server';
   //   revalidateTag('product-title');
   // };
+  const createChatRoom = async (): Promise<never> => {
+    'use server';
+    const session = await getSession();
+    const seller = product.userId;
+    const user = session.id!;
+    if (!session) {
+      throw new Error('User is not authenticated');
+    }
+    if (!product || !product.userId) {
+      throw new Error('Invalid product data');
+    }
+    if (seller === user) {
+      throw new Error(
+        '연결하려는 사용자 중 하나가 데이터베이스에 존재하지 않습니다.',
+      );
+    }
+    revalidateTag('product-detail');
+    const room = await db.chatRoom.create({
+      data: {
+        users: { connect: [{ id: seller }, { id: user }] },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    revalidatePath('/home');
+    redirect(`/chats/${room.id}`);
+  };
 
   return (
     <div className=''>
@@ -135,12 +167,11 @@ export default async function ProductDetatil({
               </button>
             </form>
           ) : null}
-          <Link
-            href='/chat'
-            className='bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold'
-          >
-            Chat
-          </Link>
+          <form action={createChatRoom}>
+            <button className='bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold'>
+              Chat
+            </button>
+          </form>
         </div>
       </div>
     </div>

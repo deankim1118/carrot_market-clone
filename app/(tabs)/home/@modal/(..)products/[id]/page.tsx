@@ -27,7 +27,6 @@ export default async function Modal({
     <div className='absolute w-full h-full z-50 left-0 top-0 bg-black flex items-center justify-center bg-opacity-45'>
       <div className='max-w-screen-sm w-full flex justify-center'>
         <CloseButton />
-
         <div className='aspect-square w-full bg-neutral-700 text-neutral-200  rounded-md flex-col justify-center items-center'>
           {product !== null ? (
             <>

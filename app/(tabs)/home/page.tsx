@@ -38,7 +38,7 @@ export type InitialProductsType = Prisma.PromiseReturnType<
 >;
 
 // export const dynamic = "force-dynamic";
-// export const revalidate = 60;
+// export const revalidate = 3;
 
 export default async function Products() {
   const initialProducts = await getCachedProducts();
@@ -47,7 +47,7 @@ export default async function Products() {
       <ProductList initialProducts={initialProducts} />
       <Link
         href='/product/add'
-        className='absolute right-0 bottom-0 rounded-full bg-orange-500 text-white p-1 flex items-center justify-center size-14 hover:bg-orange-400'
+        className='absolute right-0 rounded-full bg-orange-500 text-white p-1 flex items-center justify-center size-14 hover:bg-orange-400'
       >
         <PlusIcon className='size-10' />
       </Link>
